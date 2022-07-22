@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Session;
 
-// use App\Models\User;
-// use Hash;
+use App\Models\User;
+use Hash;
 
 class AuthController extends Controller
 {
@@ -36,14 +37,12 @@ class AuthController extends Controller
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-           
-            return response()->json(['code'=>200, 'message'=>''], 200);
+            $token = Auth::user()->createToken('myapptoken')->plainTextToken;
+            return response()->json(['code'=>200, 'message'=>'', 'token'=>$token], 200);
         }
   
         return response()->json(['code'=>201, 'message'=>'You are not our member'], 200);
     }
-
-    
 
     /**
      * Write code on Method
@@ -53,6 +52,8 @@ class AuthController extends Controller
     public function sign_out() {
         Session::flush();
         Auth::logout();
+
+        Auth::user()->tokens()->delete();
   
         return Redirect('login');
     }

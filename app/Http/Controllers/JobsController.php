@@ -45,6 +45,8 @@ class JobsController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function response_job(Request $request){
+        
+
         // check coin
         $user = User::where('id', $this->user['id'])->first();
         if($user->coin < env('RESPONSE_COIN')){
@@ -129,4 +131,5 @@ class JobsController extends BaseController
 
         return response()->json(['code'=>200, 'message'=>''], 200);
     }
+
 }

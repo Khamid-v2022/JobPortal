@@ -47,6 +47,12 @@ class MyjobController extends BaseController
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'id' => 'required|integer',
+            'title' => 'required|string',
+            'description' => 'required|string',
+        ]);
+
         if(!isset($request->id)){
             // check can post or not 
             // user cannot post more than two job vacancies per 24 hours

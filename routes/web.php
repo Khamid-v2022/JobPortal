@@ -26,10 +26,12 @@ use App\Http\Controllers\MyjobController;
 
 Route::get('/login', [AuthController::class, 'index'])->name('loginpage');
 Route::post('/login', [AuthController::class, 'sign_in'])->name('login');
-Route::get('/logout', [AuthController::class, 'sign_out'])->name('logout');
+
 
 Route::group(['middleware' => ['auth', 'user']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/logout', [AuthController::class, 'sign_out'])->name('logout');
     
     Route::get('/job_list', [JobsController::class, 'index'])->name('job_list');
     Route::post('/job_list', [JobsController::class, 'response_job']);

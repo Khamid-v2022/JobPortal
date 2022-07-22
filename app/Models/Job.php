@@ -17,4 +17,8 @@ class Job extends Model
         'last_email_at'
     ];
 
+
+    public function responses(){
+        return $this->hasMany(Response::class, 'job_id', 'id');
+    }
 }

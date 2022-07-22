@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JobsController;
+use App\Http\Controllers\MyjobController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +30,11 @@ Route::get('/logout', [AuthController::class, 'sign_out'])->name('logout');
 
 Route::group(['middleware' => ['auth', 'user']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/job_list', [JobsController::class, 'index'])->name('job_list');
+    Route::resource('/my_job', MyjobController::class, [
+        'names' => [
+            'index' => 'my_job'
+        ]
+    ]);
 });
 

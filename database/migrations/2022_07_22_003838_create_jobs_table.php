@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
             $table->string('title');
             $table->mediumText('description')->nullable();
             $table->timestamps();

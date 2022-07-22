@@ -1,0 +1,19 @@
+.header-tablet-and-mobile-fixed .wrapper {
+    padding-top: 80px!important;
+}
+
+.job-item {
+    max-height: 80px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    justify-content:space-between;
+}
+
+.job-table.table td, .job-table.table th, .job-table.table tr {
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

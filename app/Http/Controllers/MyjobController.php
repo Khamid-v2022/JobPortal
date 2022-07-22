@@ -58,10 +58,14 @@ class MyjobController extends BaseController
 
             // check coin
             // need 2 coin for post
-            if($this->user['coin'] < 2){
+            if($this->user['coin'] < env('POST_COIN')){
                 return response()->json(['code'=>202, 'message'=>'Sorry. Not enough coins for post a job.'], 200);
             }
 
+            
+            $user = User::where('id', $this->user['id'])->first();
+            $user->coin = $user->coin - env('POST_COIN');
+            $user->save();
         }
 
         $job = Job::updateOrCreate(['id' => $request->id], [
@@ -70,9 +74,6 @@ class MyjobController extends BaseController
                 'description' => $request->description,
             ]);
 
-        $user = User::where('id', $this->user['id'])->first();
-        $user->coin = $user->coin - 2;
-        $user->save();
         
         return response()->json(['code'=>200, 'message'=>'','data' => $job], 200);
     }
@@ -124,10 +125,10 @@ class MyjobController extends BaseController
 
         $user = User::where('id', $this->user['id'])->first();
         
-        if($user->coin + 2 > 5)
-            $user->coin = 5;
+        if($user->coin + env('POST_COIN') > env('MAX_COIN_NUMBER'))
+            $user->coin = env('MAX_COIN_NUMBER');
         else
-            $user->coin = $user->coin + 2;
+            $user->coin = $user->coin + env('POST_COIN');
         $user->save();
 
         return response()->json(['code'=>200, 'message'=>'Success'], 200);

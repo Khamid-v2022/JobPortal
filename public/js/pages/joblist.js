@@ -148,7 +148,8 @@ $(function () {
             type: "DELETE",
             url: _url,
             success: function (data) {
-                $("tr[post_id = " + id + "]").remove();
+                // $("tr[post_id = " + id + "]").remove();
+                location.reload();
             },
             error: function (data) {
                 console.log("Error:", data);

@@ -43,7 +43,7 @@ class JobsController extends BaseController
     public function response_job(Request $request){
         // check coin
         $user = User::where('id', $this->user['id'])->first();
-        if($user->coin < 1){
+        if($user->coin < env('RESPONSE_COIN')){
             return response()->json(['code'=>201, 'message'=>'Sorry. Not enough coins for response'], 200);
         }
 

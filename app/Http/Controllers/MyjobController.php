@@ -50,7 +50,7 @@ class MyjobController extends BaseController
             // check can post or not 
             // user cannot post more than two job vacancies per 24 hours
             $limit_timestamp = Carbon::now()->subDay(env('LIMIT_DAY'));
-            $jobs = Job::where('created_at', '>=', $limit_timestamp)->get();
+            $jobs = Job::where('user_id', $this->user['id'])->where('created_at', '>=', $limit_timestamp)->get();
             if(count($jobs) >= env('LIMIT_POST_COUNT')){
                 return response()->json(['code'=>201, 'message'=>'You posted ' . env('LIMIT_POST_COUNT') . ' jobs within 24 hours.'], 200);
             }

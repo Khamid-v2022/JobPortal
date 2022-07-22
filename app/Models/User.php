@@ -22,7 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'coin',
-        'last_posted_at',
         'last_got_coin_at',
     ];
 

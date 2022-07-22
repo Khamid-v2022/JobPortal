@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('password');
             $table->integer('coin')->default('0');
             $table->rememberToken();
-            $table->timestamp('last_posted_at')->nullable();
             $table->timestamp('last_got_coin_at')->nullable();
             $table->timestamps();
         });

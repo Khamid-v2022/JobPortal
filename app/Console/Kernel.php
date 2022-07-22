@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Console\Commands\DailyCoin;
+use App\Console\Commands\ResponseEmail;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         DailyCoin::class,
+        ResponseEmail::class
     ];
 
     /**
@@ -27,9 +29,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('coin:get')
-        //         ->daily();
-        $schedule->command('coin:daily')->everyMinute();
+        $schedule->command('coin:daily')->daily();
+        $schedule->command('response:emailing')->everyMinute();
+        // hourly()
     }
 
     /**

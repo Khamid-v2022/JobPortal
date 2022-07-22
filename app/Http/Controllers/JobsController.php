@@ -9,6 +9,10 @@ use App\Models\User;
 use App\Models\Response;
 use App\Models\Like;
 
+use Mail;
+use App\Mail\NotifyMail;
+use Carbon\Carbon;
+
 class JobsController extends BaseController
 {
     public function index(){
@@ -50,6 +54,7 @@ class JobsController extends BaseController
         $user->coin--;
         $user->save();
 
+        // create record
         $response = Response::create([
             'user_id' => $this->user['id'],
             'job_id' => $request->job_id,
@@ -57,7 +62,45 @@ class JobsController extends BaseController
             'message' => $request->message
         ]);
 
-        return response()->json(['code'=>200, 'message'=>'', 'data' => $response], 200);
+
+        // Emailing
+        $job_info = Job::where('id', $request->job_id)->first();
+        $timestap_limit = Carbon::now()->subHour(env('RESPONSE_EMAIL_LIMIT_HOUR'));
+        
+        // email send condition - first response or passed 1 hour more since last emailing
+        if(!$job_info['last_email_at'] || ($job_info['last_email_at'] && $job_info['last_email_at'] < $timestap_limit)){
+            // get owner info
+            $owner = User::where('id', $request->owner_id)->first();
+            
+            $responsed_users = Response::select("responses.created_at", "users.name")
+                                ->where('job_id', $request->job_id)
+                                ->leftjoin('users', 'responses.user_id', '=', 'users.id')
+                                ->get();
+
+            $mailData = [
+                'job_title' => $job_info['title'],
+                'users' => $responsed_users
+            ]; 
+
+            Mail::to($owner['email'])->send(new NotifyMail($mailData));
+            
+            // update job
+            $job_info->last_email_at = Carbon::now();
+            $job_info->needs_email = 'no';
+            $job_info->save();
+
+            // if (Mail::failures()) {
+            //     return response()->json(['code'=>201, 'message'=>'Successfully send but failed email'], 200);
+            // }else{
+                return response()->json(['code'=>200, 'message'=>'Send an email'], 200);
+            // }
+        } else {
+            $job_info->needs_email = 'yes';
+            $job_info->save();
+            
+            return response()->json(['code'=>200, 'message'=>'Email will send in ' . env('RESPONSE_EMAIL_LIMIT_HOUR') . ' hour'], 200);
+        }
+        
     }
 
 

@@ -13,6 +13,8 @@ class Job extends Model
         'user_id',
         'title',
         'description',
+        'needs_email',
+        'last_email_at'
     ];
 
 }

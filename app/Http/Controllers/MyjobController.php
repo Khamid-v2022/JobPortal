@@ -123,7 +123,11 @@ class MyjobController extends BaseController
         $user = Job::where('id', $id)->delete();
 
         $user = User::where('id', $this->user['id'])->first();
-        $user->coin = $user->coin + 2;
+        
+        if($user->coin + 2 > 5)
+            $user->coin = 5;
+        else
+            $user->coin = $user->coin + 2;
         $user->save();
 
         return response()->json(['code'=>200, 'message'=>'Success'], 200);

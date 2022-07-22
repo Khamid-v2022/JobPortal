@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Job;
+use App\Models\User;
 use Carbon\Carbon;
 
 class MyjobController extends BaseController
@@ -54,6 +55,13 @@ class MyjobController extends BaseController
             if(count($jobs) >= env('LIMIT_POST_COUNT')){
                 return response()->json(['code'=>201, 'message'=>'You posted ' . env('LIMIT_POST_COUNT') . ' jobs within 24 hours.'], 200);
             }
+
+            // check coin
+            // need 2 coin for post
+            if($this->user['coin'] < 2){
+                return response()->json(['code'=>202, 'message'=>'Sorry. Not enough coins for post a job.'], 200);
+            }
+
         }
 
         $job = Job::updateOrCreate(['id' => $request->id], [
@@ -62,7 +70,9 @@ class MyjobController extends BaseController
                 'description' => $request->description,
             ]);
 
-
+        $user = User::where('id', $this->user['id'])->first();
+        $user->coin = $user->coin - 2;
+        $user->save();
         
         return response()->json(['code'=>200, 'message'=>'','data' => $job], 200);
     }
@@ -111,6 +121,11 @@ class MyjobController extends BaseController
     {
         //
         $user = Job::where('id', $id)->delete();
+
+        $user = User::where('id', $this->user['id'])->first();
+        $user->coin = $user->coin + 2;
+        $user->save();
+
         return response()->json(['code'=>200, 'message'=>'Success'], 200);
     }
 }

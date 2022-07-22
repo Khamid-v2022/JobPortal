@@ -94,7 +94,7 @@ $(function () {
                             success: function (response) {
                                 if (response.code == 200) {
                                     location.reload();
-                                } else if (response.code == 201) {
+                                } else {
                                     t.removeAttribute("data-kt-indicator");
                                     t.disabled = !1;
                                     o.hide();

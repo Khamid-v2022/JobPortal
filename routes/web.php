@@ -30,7 +30,12 @@ Route::get('/logout', [AuthController::class, 'sign_out'])->name('logout');
 
 Route::group(['middleware' => ['auth', 'user']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('/job_list', [JobsController::class, 'index'])->name('job_list');
+    Route::post('/job_list', [JobsController::class, 'response_job']);
+    Route::post('/job_list/like', [JobsController::class, 'like_job']);
+    
+    
     Route::resource('/my_job', MyjobController::class, [
         'names' => [
             'index' => 'my_job'
